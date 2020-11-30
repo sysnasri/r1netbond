@@ -1,11 +1,11 @@
 --- 
-- name: This playbook is part of r1cloud challange to set network bonding in recent Ubuntu release
-  hosts: james_bond
+- name: This playbook is part of r1cloud challange it sets network bonding for recent Ubuntu releases
+  hosts: "{{Target_Host}}"
   vars_files: vars.yaml
   tasks: 
        - package_facts:
            manager: "auto"
-       - name: changing grub to set traditional interface naming convention.
+       - name: Changing grub to set traditional interface naming convention.
          lineinfile:
             name: /etc/default/grub
             regexp: '^GRUB_CMDLINE_LINUX='
@@ -15,9 +15,9 @@
            - update_grub
            - fix_eth0    
            - system_reboot   
-       - name: force to run the previous handler 
+       - name: Force to run the previous handlers 
          meta: flush_handlers          
-       - name: changing netplan to traditional networking service ifupdown
+       - name: Changing netplan to traditional networking service ifupdown
          package:
             name: ifupdown
             state: latest
@@ -25,7 +25,7 @@
          notify:
            - system_reboot
        - setup:     
-       - name: showing eth* interface devices for debuging purpose 
+       - name: Showing eth* interface devices for debuging purpose 
          set_fact:
             if_list: "{{ansible_interfaces | reject('match','lo') |reject('match','bond0') | select('string') | sort | list }}"
        - debug:
@@ -33,7 +33,7 @@
          loop: "{{ if_list }}"
 
 
-       - name: install ifenslave-2.6 package
+       - name: Installing ifenslave-2.6 package
          package:
             name: ifenslave
             state: latest
@@ -46,11 +46,11 @@
        - name: Enabling kernel module
          command:
            cmd: modprobe bonding
-       - name: source interface.d 
+       - name: Source interface.d 
          template:
            src: if_source.j2
            dest: /etc/network/interfaces
-       - name: set network bonding
+       - name: Set network bonding
          template:
            src: r1netbond.j2
            dest: /etc/network/interfaces.d/bond
