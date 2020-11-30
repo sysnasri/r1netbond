@@ -17,7 +17,7 @@ bond-master {{ james_bond0 }}
 
 {% for key,value in bond_list.items() %}
 auto {{ key }}
-iface {{ key }} inet none
+iface {{ key }} inet dhcp
   bond-mode 4
   bond-slaves {{ value[0] }} {{ value[1] }}
   bond-miimon 200
