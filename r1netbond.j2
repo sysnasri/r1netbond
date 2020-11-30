@@ -1,0 +1,43 @@
+# {{ ansible_managed }}
+
+# This is a network bonding interface file
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+{% if ansible_interfaces|length > 2 %}
+
+{% for interface in if_list %}
+
+auto {{ interface }}
+iface {{ interface }} inet manual
+bond-master {{ james_bond0 }}
+
+{% endfor %}
+
+{% for key,value in bond_list.items() %}
+auto {{ key }}
+iface {{ key }} inet none
+  bond-mode 4
+  bond-slaves {{ value[0] }} {{ value[1] }}
+  bond-miimon 200
+  bond-lacp-rate 1
+
+{% endfor  %}
+
+auto {{ james_bond0 }}
+iface {{ james_bond0 }} inet static
+  address {{ ansible_default_ipv4.address }}
+  netmask {{ ansible_default_ipv4.netmask }}
+  gateway {{ ansible_default_ipv4.gateway }}
+  network {{ ansible_default_ipv4.network }}
+  bond-mode 4
+  bond-slaves {{ if_list[0] }} {{ if_list[1] }}
+  bond-miimon 200
+  bond-lacp-rate 1
+
+{% endif %}
+
+dns-nameservers 8.8.8.8 8.8.4.4
+
+# the end

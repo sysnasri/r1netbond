@@ -1,0 +1,9 @@
+bond_list:
+    bond1:
+          - eth2
+          - eth3
+    bond2:
+          - eth4
+          - eth5
+james_bond0: 'bond0'
+

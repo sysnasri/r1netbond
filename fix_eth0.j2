@@ -1,0 +1,15 @@
+#{{ansible_managed}}
+
+# This template is for network connectivity after changing interface naming convension in new linuxes.
+
+#loopback device
+auto lo
+iface lo inet loopback
+
+
+#eth0 interface
+auto eth0
+iface eth0 inet static
+   address {{ ansible_default_ipv4.address }}
+   netmask {{ ansible_default_ipv4.netmask }}
+   gateway {{ ansible_default_ipv4.gateway }}
